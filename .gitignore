@@ -1,0 +1,101 @@
+# Compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Compiled extensions
+*.so
+*.pyd
+*.dll
+
+# Compiled libraries
+*.lib
+*.bak
+*.swp
+*.db
+
+# Django-related files
+*.sqlite3
+*.pyc
+*.pyo
+*.pyd
+*.db.sqlite3
+__pycache__/
+
+# Secret keys
+*.secret_key
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+*.sqlite3
+*.db
+*.stackdump
+
+# Environment-specific files
+.env
+.env.*
+
+# Development files
+*.bak
+*.swp
+*.tmp
+
+# IDE-specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Compiled Sass files
+*.sassc
+
+# Package files
+*.egg-info/
+dist/
+build/
+*.egg
+*.eggs
+
+# Ignore migrations
+**/migrations/
+**/__pycache__/migrations/
+**/south_migrations/
+
+# Ignore static files (media files, compiled CSS, JavaScript, etc.)
+static/
+
+# Ignore database backups
+*.backup
+
+# Ignore test coverage results
+htmlcov/
+.coverage
+
+# Ignore virtual environments
+venv/
+env/
+virtualenv/
+/.venv/
+
+# Ignore compiled JavaScript files
+*.js.map
+
+# Ignore Docker related files
+.dockerignore
+Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+
+# Ignore dependencies and caches for Node.js
+node_modules/
+npm-debug.log*
+yarn.lock
+
+# Ignore IDE and editor-specific files
+*.iml
+*.ipr
+*.iws
+*.DS_Store

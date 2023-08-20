@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "event_automation"
+version = "0.1.0"
+description = "Django application to manage the back-end for the event automation platform"
+authors = ["kenjinezumi <kenjitsuchiya1@gmail.com>"]
+readme = "README.md"
+packages = [{include = "event_automation"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pytest = "^7.4.0"
+Django = "^4.2.4"
+black = "^23.7.0"
+flake8 = "^6.1.0"
+drf-yasg = "^1.21.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
