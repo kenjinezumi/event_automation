@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'sales',
     'events',
     'accounts',
-    'drf_yasg'
+    'drf_yasg',
+    'corsheaders',
+
 ]
 
 MIDDLEWARE = [
@@ -51,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'event_automation.urls'
@@ -73,6 +77,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'event_automation.wsgi.application'
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Allow your frontend's origin
+]
+
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

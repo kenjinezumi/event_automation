@@ -30,18 +30,27 @@ def event_detail(request, event_id):
 @csrf_exempt
 def create_event(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        event = Event.objects.create(
-            event_name=data['event_name'],
-            registration_page_url=data['registration_page_url'],
-            event_date=data['event_date'],
-            event_location=data['event_location'],
-            maximum_capacity=data['maximum_capacity'],
-            target_audience=json.dumps(data['target_audience']),
-            event_copy=data['event_copy'],
-        )
-        return JsonResponse({'id': event.id, 'message': 'Event created successfully'})
-
+        try:
+            data = json.loads(request.body)
+            event = Event.objects.create(
+                event_id=data['event_id'],
+                event_name=data['event_name'],
+                registration_page_url=data['registration_page_url'],
+                event_date=data['event_date'],
+                event_location=data['event_location'],
+                maximum_capacity=data['maximum_capacity'],
+                target_audience=json.dumps(data['target_audience']),
+                event_copy=data['event_copy'],
+            )
+            return JsonResponse({'id': event.id, 'message': 'Event created successfully'})
+        except KeyError as e:
+            return JsonResponse({'error': f'Missing key: {e}'}, status=400)
+        except ValueError as e:
+            return JsonResponse({'error': f'Invalid data: {e}'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f'An error occurred: {e}'}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
 # Update an event
 @csrf_exempt
 def update_event(request, event_id):

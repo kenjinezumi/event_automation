@@ -1,22 +1,46 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Count
+
 from .models import Account, Contact
+
+from sales.models import Salesperson
 import json
 
 # Get list of accounts
 def account_list(request):
-    accounts = Account.objects.all()
-    data = [{'id': account.id, 'country': account.country, 'industry': account.industry} for account in accounts]
-    return JsonResponse({'accounts': data})
+    accounts = Account.objects.values('account_id').annotate(count=Count('account_id'))
+    unique_account_id = [entry['account_id'] for entry in accounts if entry['count'] > 0]
+    return JsonResponse({'account_id': unique_account_id})
+
+def country_list(request):
+    countries = Account.objects.values('country').annotate(count=Count('country'))
+    unique_country = [entry['country'] for entry in countries if entry['count'] > 0]
+    return JsonResponse({'country': unique_country})
+
+def industries_list(request):
+    accounts = Account.objects.values('industry').annotate(count=Count('industry'))
+    unique_industries = [entry['industry'] for entry in accounts if entry['count'] > 0]
+    return JsonResponse({'industries': unique_industries})
+
+def functions_list(request):
+    accounts = Contact.objects.values('job_function').annotate(count=Count('job_function'))
+    unique_functions = [entry['job_function'] for entry in accounts if entry['count'] > 0]
+    return JsonResponse({'job_function': unique_functions})
+
+def seniority_list(request):
+    accounts = Contact.objects.values('seniority').annotate(count=Count('seniority'))
+    unique_seniority = [entry['seniority'] for entry in accounts if entry['count'] > 0]
+    return JsonResponse({'seniority': unique_seniority})
 
 # Get details of a specific account
 def account_detail(request, account_id):
     try:
-        account = Account.objects.get(pk=account_id)
+        account = Account.objects.get(account_id=account_id)
         contacts = Contact.objects.filter(account=account)
         contact_data = [{'name': contact.name, 'seniority': contact.seniority, 'job_function': contact.job_function} for contact in contacts]
         data = {
-            'id': account.id,
+            'account_id': account.account_id,
             'bdr': account.bdr.name,
             'country': account.country,
             'industry': account.industry,
@@ -36,10 +60,11 @@ def create_account(request):
             bdr = Salesperson.objects.get(pk=bdr_id)
             account = Account.objects.create(
                 bdr=bdr,
+                account_id=data['account_id'],
                 country=data['country'],
                 industry=data['industry'],
             )
-            return JsonResponse({'id': account.id, 'message': 'Account created successfully'})
+            return JsonResponse({'account_id': account.account_id, 'message': 'Account created successfully'})
         except Salesperson.DoesNotExist:
             return JsonResponse({'error': 'BDR not found'}, status=404)
 
@@ -47,13 +72,13 @@ def create_account(request):
 @csrf_exempt
 def update_account(request, account_id):
     try:
-        account = Account.objects.get(pk=account_id)
+        account = Account.objects.get(account_id=account_id)
         if request.method == 'PUT':
             data = json.loads(request.body)
             account.country = data['country']
             account.industry = data['industry']
             account.save()
-            return JsonResponse({'id': account.id, 'message': 'Account updated successfully'})
+            return JsonResponse({'account_id': account.account_id, 'message': 'Account updated successfully'})
     except Account.DoesNotExist:
         return JsonResponse({'error': 'Account not found'}, status=404)
 
@@ -61,7 +86,7 @@ def update_account(request, account_id):
 @csrf_exempt
 def delete_account(request, account_id):
     try:
-        account = Account.objects.get(pk=account_id)
+        account = Account.objects.get(account_id=account_id)
         account.delete()
         return JsonResponse({'message': 'Account deleted successfully'})
     except Account.DoesNotExist:
