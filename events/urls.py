@@ -7,4 +7,7 @@ urlpatterns = [
     path('events/create/', views.create_event, name='create-event'),
     path('events/update/<int:event_id>/', views.update_event, name='update-event'),
     path('events/delete/<int:event_id>/', views.delete_event, name='delete-event'),
+    path('events/delete/<int:event_id>/', views.delete_event, name='delete-event'),
+    path('events/list/<int:year>/<int:month>/<int:day>/', views.get_events_for_date, name='get_events_for_date'),
+
 ]
