@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Event
+from accounts.models import Contact, Account
 import json
 
 # Get list of events
@@ -26,14 +27,13 @@ def event_detail(request, event_id):
     except Event.DoesNotExist:
         return JsonResponse({'error': 'Event not found'}, status=404)
 
-# Create a new event
 @csrf_exempt
 def create_event(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            print(data)
             event = Event.objects.create(
-                event_id=data['event_id'],
                 event_name=data['event_name'],
                 registration_page_url=data['registration_page_url'],
                 event_date=data['event_date'],
@@ -42,15 +42,26 @@ def create_event(request):
                 target_audience=json.dumps(data['target_audience']),
                 event_copy=data['event_copy'],
             )
+            print(event)
+
+            if 'contact_lists' in data:
+                print('test')
+                event.invite_contacts(data['contact_lists'])
+                print("End of test")
+
             return JsonResponse({'id': event.id, 'message': 'Event created successfully'})
         except KeyError as e:
             return JsonResponse({'error': f'Missing key: {e}'}, status=400)
+        except Contact.DoesNotExist:
+            return JsonResponse({'error': 'One or more contacts do not exist'}, status=400)
         except ValueError as e:
             return JsonResponse({'error': f'Invalid data: {e}'}, status=400)
         except Exception as e:
             return JsonResponse({'error': f'An error occurred: {e}'}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
 # Update an event
 @csrf_exempt
 def update_event(request, event_id):

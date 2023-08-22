@@ -18,6 +18,10 @@ def account_list(request):
     unique_account_id = [entry['account_id'] for entry in accounts if entry['count'] > 0]
     return JsonResponse({'account_id': unique_account_id})
 
+def bdr_list(request):
+    bdrs = Salesperson.objects.values('name').annotate(count=Count('name'))
+    unique_bdr_id = [entry['name'] for entry in bdrs if entry['count'] > 0 and entry['name'] != 'BDR Name']
+    return JsonResponse({'unique_bdr_id': unique_bdr_id})
 
 def country_list(request):
     countries = Account.objects.values('country').annotate(count=Count('country'))

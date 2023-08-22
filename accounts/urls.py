@@ -22,6 +22,7 @@ urlpatterns = [
     path('seniority/', views.seniority_list, name='seniority-list'),
     path('countries/', views.country_list, name='country-list'),
     path('algo/', views.algo, name='algo'),
+    path('bdrs/', views.bdr_list, name='bdr'),
 
     path('accounts/<int:account_id>/', views.account_detail, name='account-detail'),
     path('accounts/create/', views.create_account, name='create-account'),
